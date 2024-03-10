@@ -122,12 +122,3 @@ packConsecutives2 xall@(x:xs) = let (first, rest) = span (==x) xall in first : p
 -- Space complexity:
 encode :: (Eq a) => [a] -> [(Int, a)]
 encode = map (\(x:xs) -> (length xs + 1, x)) . packConsecutives2
-
--------------------------
--- Problem n:
--- Time complexity: 
--- Space complexity:
-
-main :: IO()
-main = do 
-    print $ encode "baaabc"
