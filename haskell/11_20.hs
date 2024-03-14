@@ -79,6 +79,68 @@ replicateElements2 (x:xs) n = [x | _ <- [1..n]] ++ replicateElements2 xs n
 dropEvery :: [a] -> Int -> [a]
 dropEvery xs every = [x | (i, x) <- zip [1..] xs, mod i every /= 0]
 
+-- Time complexity: 
+-- Space complexity:
+dropEvery2 :: [a] -> Int -> [a]
+dropEvery2 xs every = helper xs every
+    where 
+        helper [] _ = []
+        helper (y:ys) 1 = helper ys every
+        helper (y:ys) count = y : helper ys (count - 1)
+
+-- Problem 17: Split a list into two parts; the length of the first part is given.
+-- Time complexity: 
+-- Space complexity:
+split :: (Ord a) => Int -> [a] -> ([a], [a])
+split n xs = (filterWith (<=n) xs, filterWith (>n) xs)
+    where
+        filterWith f = map snd . filter (f . fst) . zip [1..]
+
+-- Time complexity: 
+-- Space complexity:
+split2 :: (Ord a) => Int -> [a] -> ([a], [a])
+split2 n = foldr helper ([], []) . zip [1..]
+    where helper (i, x) acc
+            | i <= n = (x : fst acc, snd acc)
+            | otherwise = (fst acc, x : snd acc)
+
+-- Time complexity: 
+-- Space complexity:
+split3 :: (Ord a) => Int -> [a] -> ([a], [a])
+split3 n allx@(x:xs) | n > 0 = let (l, r) = split3 (n - 1) xs in (x : l, r)
+split3 _ lst = ([], lst)
+
+-- Problem 18: Extract a slice from a list.
+-- Time complexity: 
+-- Space complexity:
+slice :: [a] -> Int -> Int -> [a]
+slice xs a b = map snd $ filter isInRange $ zip [1..] xs 
+    where
+        isInRange (i, _) = i >= a && i <= b
+
+-- Time complexity: 
+-- Space complexity:
+slice2 :: [a] -> Int -> Int -> [a]
+slice2 [] _ _ = []
+slice2 _ _ 0 = []
+slice2 (x:xs) 1 b =  x : slice2 xs 1 (b-1) 
+slice2 (x:xs) a b = slice2 xs (a-1) (b-1)
+
+-- Problem 19: Rotate a list N places to the left.
+-- Time complexity: 
+-- Space complexity:
+rotate :: [a] -> Int -> [a]
+rotate lst n | n >= 0 = drop n lst ++ take n lst 
+rotate lst n = drop (length lst + n) lst ++ take (length lst + n) lst 
+
+-- Problem 20: Remove the K'th element from a list.
+-- Time complexity: 
+-- Space complexity:
+remove :: Int -> [a] -> (Maybe a, [a])
+remove _ [] = (Nothing, [])
+remove 1 (x:xs) = (Just x, xs)
+remove k (x:xs)= let (removed, lst) = remove (k-1) xs in (removed, x:lst)
+
 -------------------------
 -- Problem n:
 -- Time complexity: 
@@ -86,4 +148,4 @@ dropEvery xs every = [x | (i, x) <- zip [1..] xs, mod i every /= 0]
 
 main :: IO()
 main = do 
-    print $ dropEvery "abcdefghik" 3
+    print $ remove 1 ['a','b','c','d']
