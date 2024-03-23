@@ -140,12 +140,3 @@ remove :: Int -> [a] -> (Maybe a, [a])
 remove _ [] = (Nothing, [])
 remove 1 (x:xs) = (Just x, xs)
 remove k (x:xs)= let (removed, lst) = remove (k-1) xs in (removed, x:lst)
-
--------------------------
--- Problem n:
--- Time complexity: 
--- Space complexity:
-
-main :: IO()
-main = do 
-    print $ remove 1 ['a','b','c','d']
