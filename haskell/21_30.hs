@@ -73,6 +73,25 @@ group gps (x:xs) = (concatMap (\(i, g) -> if g > 0 then addToGroup i x $ group (
         addToGroup :: Int -> a -> [[[a]]] -> [[[a]]]
         addToGroup i e  =  map (\g -> zipWith (\i_ g_ -> if i_ == i then e:g_ else g_) [0..] g)
 
+-- Problem 28: Sorting a list of lists according to length of sublists.
+-- Time complexity: 
+-- Space complexity:
+lsort :: (Ord a) => [[a]] -> [[a]]
+lsort [] = []
+lsort (x:xs) = lsort (filter ((<=length x) . length) xs) ++ [x] ++ lsort (filter ((>length x) . length) xs)
+
+-- Time complexity: 
+-- Space complexity:
+lsort2 :: (Ord a) => [[a]] -> [[a]]
+lsort2 lst = let swapped = swapper lst in if swapped == lst then lst else lsort2 swapped 
+    where 
+        swapper :: (Ord a) => [[a]] -> [[a]]
+        swapper [] = []
+        swapper [x] = [x]
+        swapper (x:(y:ys)) 
+            | length x > length y = y : swapper (x : ys)
+            | otherwise = x : swapper (y : ys)
+
 -------------------------
 -- Problem n:
 -- Time complexity: 
@@ -80,4 +99,4 @@ group gps (x:xs) = (concatMap (\(i, g) -> if g > 0 then addToGroup i x $ group (
 
 main :: IO()
 main = do 
-    print $ group [1, 2] [1, 2, 3, 4]
+    print $ lsort2 [[1, 2], [1], [1], [1, 2, 3], [1, 2]]
